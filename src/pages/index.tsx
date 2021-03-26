@@ -2,15 +2,13 @@ import React from 'react';
 import { PageProps } from 'gatsby';
 
 import Title from '@/components/Title';
+import SortAnimation from '@/components/SortAnimation';
+import { Sort } from '@/utils/sort';
 
 const Home: React.FC<PageProps> = () => (
   <main>
     <Title />
-    <p>A TypeScript starter for Gatsby. Great for advanced users.</p>
-    <p>
-      Follow me on Twitter (
-      <a href="https://twitter.com/jpedroschmitz">@jpedroschmitz</a>)
-    </p>
+    <SortAnimation sortMethod={Sort.bubbleSort} itemCount={20} />
   </main>
 );
 
