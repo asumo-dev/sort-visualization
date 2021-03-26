@@ -16,7 +16,7 @@ class SortRenderer {
 
   private readonly heightGap: number;
 
-  private readonly barX: (d, i: number) => number;
+  private readonly barX: (_, i: number) => number;
 
   private readonly barY: (d) => number;
 
@@ -39,7 +39,7 @@ class SortRenderer {
 
     this.fontSize = Math.min(this.margin, this.barWidth) - 3;
 
-    this.barX = (d, i: number) =>
+    this.barX = (_, i: number) =>
       this.margin + i * (this.barWidth + this.barSpace);
     this.barY = (d) => this.margin + this.maxBarHeight - d * this.heightGap;
   }
@@ -60,6 +60,7 @@ class SortRenderer {
         (d, i) => `translate(${this.barX(d, i)} ${this.barY(d)})`,
       );
 
+    // bar
     g.append(`rect`)
       .attr(`class`, `bar`)
       .attr(`width`, this.barWidth)
@@ -75,6 +76,7 @@ class SortRenderer {
 
     const textY = (d) => d * this.heightGap + this.fontSize / 2 + 4;
 
+    // text of bar size
     g.append(`text`)
       .text((d) => d)
       .attr(`x`, this.barWidth / 2)
@@ -95,45 +97,48 @@ class SortRenderer {
 
     const g = this.svg.selectAll(`.bar-group`).data(items, (d: number) => d);
 
-    let t = g.transition();
-
-    if (delay) {
-      t = t.delay(options.delay);
-    }
-    if (duration) {
-      t = t.duration(options.duration);
+    if (highlight) {
+      SortRenderer.highlightBars(g, highlight);
     }
 
-    t = t
+    return g
+      .transition()
       .ease(d3.easeElasticOut)
       .attr(
         `transform`,
         (d, i) => `translate(${this.barX(d, i)} ${this.barY(d)})`,
-      );
+      )
+      .call((t2) => {
+        if (delay) {
+          t2.delay(options.delay);
+        }
+        if (duration) {
+          t2.duration(options.duration);
+        }
+      })
+      .end();
+  }
 
-    if (highlight) {
-      const isHighlight = (i) => highlight.includes(i);
+  private static highlightBars(g, targets: number[]) {
+    const isHighlight = (i) => targets.includes(i);
 
-      g.select(`.bar`)
-        .transition(t)
-        .duration(100)
-        .attr(`opacity`, (d, i) => (isHighlight(i) ? 0.8 : 0.4));
+    g.select(`.bar`)
+      .transition()
+      .duration(100)
+      .attr(`opacity`, (d, i) => (isHighlight(i) ? 0.8 : 0.4));
 
-      g.select(`.size-text`)
-        .transition(t)
-        .duration(100)
-        .attr(`opacity`, (d, i) => (isHighlight(i) ? 0.8 : 0.4))
-        .attr(`transform`, (d, i) => `scale(${isHighlight(i) ? 1 : 0.8})`);
-    }
-
-    return t.end();
+    g.select(`.size-text`)
+      .transition()
+      .duration(100)
+      .attr(`opacity`, (d, i) => (isHighlight(i) ? 0.8 : 0.4))
+      .attr(`transform`, (d, i) => `scale(${isHighlight(i) ? 1 : 0.8})`);
   }
 
   startCompletionAnimation(items: number[]) {
     const duration = 1000 / items.length;
     const delayFunc = (d, i) => duration * i;
 
-    const t = this.svg
+    this.svg
       .selectAll(`.bar`)
       .transition()
       .delay(delayFunc)
@@ -146,9 +151,10 @@ class SortRenderer {
 
     this.svg
       .selectAll(`.size-text`)
-      .transition(t)
+      .transition()
       .delay(delayFunc)
       .duration(200)
+      .attr(`opacity`, 1)
       .attr(`transform`, `scale(1)`);
   }
 }
