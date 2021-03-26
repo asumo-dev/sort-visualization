@@ -37,19 +37,24 @@ class SortRenderer {
       .scaleSequential(d3.interpolateRainbow)
       .domain([items[0], items[items.length - 1]]);
 
+    const x = (d, i: number) =>
+      this.margin + i * (this.barWidth + this.barSpace);
+    const y = (d) => this.margin + this.maxBarHeight - d * this.heightGap;
+
     this.svg
       .selectAll(`.bar`)
       .data(items, (d: number) => d)
       .enter()
       .append(`rect`)
       .attr(`class`, `bar`)
-      .attr(
-        `x`,
-        (d, i: number) => this.margin + i * (this.barWidth + this.barSpace),
-      )
-      .attr(`y`, (d) => this.margin + this.maxBarHeight - d * this.heightGap)
+      .attr(`x`, x)
+      .attr(`y`, y)
       .attr(`width`, this.barWidth)
       .attr(`height`, (d) => d * this.heightGap)
+      .attr(
+        `transform-origin`,
+        (d, i) => `${x(d, i) + this.barWidth / 2} ${y(d) + d * this.heightGap}`,
+      )
       .attr(`rx`, 4)
       .attr(`ry`, 4)
       .attr(`opacity`, 0.7)
@@ -88,6 +93,28 @@ class SortRenderer {
         (d, i: number) => this.margin + i * (this.barWidth + this.barSpace),
       )
       .end();
+  }
+
+  startCompletionAnimation(items: number[]) {
+    const duration = 1000 / items.length;
+    const delayFunc = (d, i) => duration * i;
+
+    const t = this.svg
+      .selectAll(`.bar`)
+      .transition()
+      .delay(delayFunc)
+      .duration(200)
+      .attr(`opacity`, 0.8);
+
+    this.svg
+      .selectAll(`.bar`)
+      .transition(t)
+      .delay(delayFunc)
+      .duration(200)
+      .attr(`transform`, `scale(${1 + this.margin / this.maxBarHeight})`)
+      .transition()
+      .duration(200)
+      .attr(`transform`, `scale(1)`);
   }
 }
 
@@ -149,6 +176,8 @@ const SortAnimation: React.FC<SortAnimationProps> = ({
           highlight: sortStep.compared,
         });
       }
+
+      renderer.startCompletionAnimation(items);
     })();
 
     return () => {
