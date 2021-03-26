@@ -2,7 +2,8 @@ import { Utils } from './utils';
 
 export type SortStep = {
   isDataUpdated: boolean;
-  swap?: number[];
+  swapped?: number[];
+  compared?: number[];
 };
 
 export class Sort {
@@ -17,12 +18,14 @@ export class Sort {
 
           yield {
             isDataUpdated: true,
-            swap: [j, j - 1],
+            swapped: [j, j - 1],
+            compared: [j, j - 1],
           };
         }
 
         yield {
           isDataUpdated: false,
+          compared: [j, j - 1],
         };
       }
     }
