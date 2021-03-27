@@ -30,4 +30,42 @@ export class Sort {
       }
     }
   }
+
+  static *cocktailSort(items: number[]): IterableIterator<SortStep> {
+    let isSwapped: boolean;
+
+    function* step(i) {
+      if (items[i] > items[i + 1]) {
+        Utils.swap(items, i, i + 1);
+        isSwapped = true;
+
+        yield {
+          isDataUpdated: true,
+          swapped: [i, i + 1],
+          compared: [i, i + 1],
+        };
+      }
+
+      yield {
+        isDataUpdated: false,
+        compared: [i, i + 1],
+      };
+    }
+
+    do {
+      isSwapped = false;
+
+      for (let i = 0; i < items.length - 1; i += 1) {
+        yield* step(i);
+      }
+
+      if (!isSwapped) {
+        return;
+      }
+
+      for (let i = items.length - 2; i >= 0; i -= 1) {
+        yield* step(i);
+      }
+    } while (isSwapped);
+  }
 }
