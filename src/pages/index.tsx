@@ -8,7 +8,7 @@ import { Sort } from '@/utils/sort';
 const Home: React.FC<PageProps> = () => (
   <main>
     <Title />
-    <SortAnimation sortMethod={Sort.bubbleSort} itemCount={15} />
+    <SortAnimation sortMethod={Sort.cocktailSort} itemCount={15} />
   </main>
 );
 
