@@ -15,4 +15,11 @@ export class Utils {
     // eslint-disable-next-line no-param-reassign
     [items[i], items[j]] = [items[j], items[i]];
   }
+
+  static ToTitleCase(text: string): string {
+    return (
+      text[0].toUpperCase() +
+      text.substr(1).replaceAll(/([a-z])([A-Z])/g, `$1 $2`)
+    );
+  }
 }
