@@ -1,10 +1,19 @@
 import { Utils } from './utils';
 
-export type SortStep = {
+export type SortStep = SerialSortStep | ParallelSortStep;
+
+export type SerialSortStep = {
   isDataUpdated: boolean;
   swapped?: number[];
   compared?: number[];
 };
+
+export type ParallelSortStep = {
+  steps: SerialSortStep[];
+};
+
+export const isParallelSortStep = (arg: SortStep): arg is ParallelSortStep =>
+  (arg as any).steps !== undefined;
 
 export class Sort {
   static *bubbleSort(items: number[]): IterableIterator<SortStep> {
@@ -125,5 +134,81 @@ export class Sort {
         }
       }
     }
+  }
+
+  private static *oddEvenSortCore(
+    items: number[],
+    parallelismDegree = 1,
+  ): IterableIterator<SortStep> {
+    let isSorted = false;
+
+    const step = (i) => {
+      if (items[i] > items[i + 1]) {
+        Utils.swap(items, i, i + 1);
+        isSorted = false;
+
+        return {
+          isDataUpdated: true,
+          swapped: [i, i + 1],
+          compared: [i, i + 1],
+        };
+      }
+
+      return {
+        isDataUpdated: false,
+        compared: [i, i + 1],
+      };
+    };
+
+    function* prepareYield(steps) {
+      if (parallelismDegree === 1) {
+        yield* steps;
+      } else {
+        yield { steps };
+      }
+    }
+
+    let steps;
+
+    while (!isSorted) {
+      isSorted = true;
+
+      steps = [];
+
+      for (let i = 1; i < items.length - 1; i += 2) {
+        steps.push(step(i));
+
+        if (steps.length === parallelismDegree) {
+          yield* prepareYield(steps);
+          steps = [];
+        }
+      }
+
+      if (steps.length > 0) {
+        yield* prepareYield(steps);
+        steps = [];
+      }
+
+      for (let i = 0; i < items.length - 1; i += 2) {
+        steps.push(step(i));
+
+        if (steps.length === parallelismDegree) {
+          yield* prepareYield(steps);
+          steps = [];
+        }
+      }
+
+      if (steps.length > 0) {
+        yield* prepareYield(steps);
+      }
+    }
+  }
+
+  static *oddEvenSort(items: number[]): IterableIterator<SortStep> {
+    yield* Sort.oddEvenSortCore(items);
+  }
+
+  static *ParallelOddEvenSort(items: number[]): IterableIterator<SortStep> {
+    yield* Sort.oddEvenSortCore(items, 16);
   }
 }

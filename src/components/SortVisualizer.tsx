@@ -1,6 +1,6 @@
 import { SortRenderer } from '@/components/SortRenderer';
 import { Utils } from '@/utils/utils';
-import { SortStep } from '@/utils/sort';
+import { SortStep, isParallelSortStep } from '@/utils/sort';
 
 type State = 'sorting' | 'stopping' | 'stopped';
 
@@ -65,6 +65,18 @@ export class SortVisualizer {
     for (const sortStep of sortMethod(this.items)) {
       if (this.state !== `sorting`) {
         return;
+      }
+
+      if (isParallelSortStep(sortStep)) {
+        const isDataUpdated = sortStep.steps.some((s) => s.isDataUpdated);
+
+        // eslint-disable-next-line no-await-in-loop
+        await this.renderer.updateBars(this.items, {
+          duration: isDataUpdated ? 500 : 100,
+          highlight: sortStep.steps.reduce((a, c) => a.concat(c.compared), []),
+        });
+
+        continue;
       }
 
       if (sortStep.isDataUpdated) {

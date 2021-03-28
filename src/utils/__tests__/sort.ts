@@ -35,3 +35,21 @@ test(`comb sort`, () => {
 
   expect(items).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
+
+test(`odd-even sort`, () => {
+  const items = [3, 1, 6, 4, 7, 2, 5, 8, 9, 0];
+  const iterator = Sort.oddEvenSort(items);
+
+  Array.from(iterator);
+
+  expect(items).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+});
+
+test(`parallel odd-even sort`, () => {
+  const items = [3, 1, 6, 4, 7, 2, 5, 8, 9, 0];
+  const iterator = Sort.ParallelOddEvenSort(items);
+
+  Array.from(iterator);
+
+  expect(items).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+});

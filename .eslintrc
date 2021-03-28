@@ -58,7 +58,8 @@
           {
             "avoidEscape": true
           }
-        ]
+        ],
+        "no-continue": "off"
       }
     }
   ],
