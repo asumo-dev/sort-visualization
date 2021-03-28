@@ -126,4 +126,38 @@ export class Sort {
       }
     }
   }
+
+  static *oddEvenSort(items: number[]): IterableIterator<SortStep> {
+    let isSorted = false;
+
+    function* step(i) {
+      if (items[i] > items[i + 1]) {
+        Utils.swap(items, i, i + 1);
+        isSorted = false;
+
+        yield {
+          isDataUpdated: true,
+          swapped: [i, i + 1],
+          compared: [i, i + 1],
+        };
+      } else {
+        yield {
+          isDataUpdated: false,
+          compared: [i, i + 1],
+        };
+      }
+    }
+
+    while (!isSorted) {
+      isSorted = true;
+
+      for (let i = 1; i < items.length - 1; i += 2) {
+        yield* step(i);
+      }
+
+      for (let i = 0; i < items.length - 1; i += 2) {
+        yield* step(i);
+      }
+    }
+  }
 }
