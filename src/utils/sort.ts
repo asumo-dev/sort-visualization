@@ -68,4 +68,29 @@ export class Sort {
       }
     } while (isSwapped);
   }
+
+  static *gnomeSort(items: number[]): IterableIterator<SortStep> {
+    let i = 0;
+
+    while (i < items.length) {
+      if (i === 0 || items[i] >= items[i - 1]) {
+        yield {
+          isDataUpdated: false,
+          compared: [i, i - 1],
+        };
+
+        i += 1;
+      } else {
+        Utils.swap(items, i, i - 1);
+
+        yield {
+          isDataUpdated: true,
+          swapped: [i, i - 1],
+          compared: [i, i - 1],
+        };
+
+        i -= 1;
+      }
+    }
+  }
 }
