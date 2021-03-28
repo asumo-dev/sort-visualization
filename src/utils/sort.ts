@@ -93,4 +93,37 @@ export class Sort {
       }
     }
   }
+
+  static *combSort(items: number[]): IterableIterator<SortStep> {
+    let gap = items.length;
+    const shrink = 1.3;
+    let isSorted = false;
+
+    while (!isSorted) {
+      gap = Math.floor(gap / shrink);
+
+      if (gap <= 1) {
+        gap = 1;
+        isSorted = true;
+      }
+
+      for (let i = 0; i + gap < items.length; i += 1) {
+        if (items[i] > items[i + gap]) {
+          Utils.swap(items, i, i + gap);
+          isSorted = false;
+
+          yield {
+            isDataUpdated: true,
+            swapped: [i, i + gap],
+            compared: [i, i + gap],
+          };
+        } else {
+          yield {
+            isDataUpdated: false,
+            compared: [i, i + gap],
+          };
+        }
+      }
+    }
+  }
 }
