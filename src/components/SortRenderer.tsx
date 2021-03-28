@@ -94,10 +94,6 @@ export class SortRenderer {
 
     const g = this.svg.selectAll(`.bar-group`).data(items, (d: number) => d);
 
-    if (highlight) {
-      SortRenderer.highlightBars(g, highlight);
-    }
-
     return g
       .transition()
       .ease(d3.easeElasticOut)
@@ -105,6 +101,11 @@ export class SortRenderer {
         `transform`,
         (d, i) => `translate(${this.barX(d, i)} ${this.barY(d)})`,
       )
+      .each(() => {
+        if (highlight) {
+          SortRenderer.highlightBars(g, highlight);
+        }
+      })
       .call((t2) => {
         if (delay) {
           t2.delay(options.delay);
