@@ -47,7 +47,7 @@ test(`odd-even sort`, () => {
 
 test(`parallel odd-even sort`, () => {
   const items = [3, 1, 6, 4, 7, 2, 5, 8, 9, 0];
-  const iterator = Sort.ParallelOddEvenSort(items);
+  const iterator = Sort.parallelOddEvenSort(items);
 
   Array.from(iterator);
 
