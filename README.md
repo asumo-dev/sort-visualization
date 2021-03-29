@@ -4,6 +4,13 @@ This is a website for visualizing some sort algorithms, built with [D3.js](https
 
 [https://asumo-dev.github.io/sort-visualization/](https://asumo-dev.github.io/sort-visualization/index.html)
 
+- [Bubble Sort](https://asumo-dev.github.io/sort-visualization/?sort=bubble-sort)
+- [Cocktail Sort](https://asumo-dev.github.io/sort-visualization/?sort=cocktail-sort)
+- [Gnome Sort](https://asumo-dev.github.io/sort-visualization/?sort=gnome-sort)
+- [Comb Sort](https://asumo-dev.github.io/sort-visualization/?sort=comb-sort)
+- [Odd-Even Sort](https://asumo-dev.github.io/sort-visualization/?sort=odd-even-sort)
+- [Odd-Even Sort (Parallel)](https://asumo-dev.github.io/sort-visualization/?sort=parallel-odd-even-sort)
+
 ## Build the site locally
 
 1. **Clone the repository and cd into the directory**
