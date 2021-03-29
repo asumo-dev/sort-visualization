@@ -11,7 +11,7 @@ const SortSelect: React.FC<SortSelectProps> = (props) => {
     <select data-testid="select" {...props}>
       {sortMethods.map((n) => (
         <option value={n} key={n}>
-          {Utils.ToTitleCase(n)}
+          {Utils.camelToTitleCase(n)}
         </option>
       ))}
     </select>

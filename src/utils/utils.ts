@@ -16,10 +16,20 @@ export class Utils {
     [items[i], items[j]] = [items[j], items[i]];
   }
 
-  static ToTitleCase(text: string): string {
+  static camelToTitleCase(text: string): string {
     return (
       text[0].toUpperCase() +
       text.substr(1).replaceAll(/([a-z])([A-Z])/g, `$1 $2`)
     );
+  }
+
+  static kebabToCamelCase(text: string): string {
+    return text.replace(/-(.)/g, (m, p1) => p1.toUpperCase());
+  }
+
+  static trimStart(text: string, trimText: string): string {
+    return text.substr(0, trimText.length) === trimText
+      ? text.slice(trimText.length)
+      : text;
   }
 }
