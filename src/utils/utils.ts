@@ -18,8 +18,7 @@ export class Utils {
 
   static camelToTitleCase(text: string): string {
     return (
-      text[0].toUpperCase() +
-      text.substr(1).replaceAll(/([a-z])([A-Z])/g, `$1 $2`)
+      text[0].toUpperCase() + text.substr(1).replace(/([a-z])([A-Z])/g, `$1 $2`)
     );
   }
 
