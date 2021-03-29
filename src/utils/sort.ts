@@ -208,7 +208,7 @@ export class Sort {
     yield* Sort.oddEvenSortCore(items);
   }
 
-  static *ParallelOddEvenSort(items: number[]): IterableIterator<SortStep> {
+  static *parallelOddEvenSort(items: number[]): IterableIterator<SortStep> {
     yield* Sort.oddEvenSortCore(items, 16);
   }
 }
